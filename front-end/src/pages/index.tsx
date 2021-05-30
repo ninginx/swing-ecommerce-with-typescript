@@ -1,10 +1,11 @@
-import HelloWorld from "components/HelloWorld";
 import { VFC } from "react";
+import Layout from "../components/layout";
+import Products from "../components/products";
 
 const Home: VFC = () => (
-  <div>
-    <HelloWorld />
-  </div>
+  <Layout>
+    <Products />
+  </Layout>
 );
 
 export default Home;
