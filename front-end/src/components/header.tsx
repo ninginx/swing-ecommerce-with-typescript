@@ -3,16 +3,19 @@ import { Box, Button, Flex, Spacer } from "@chakra-ui/react";
 
 type Props = {
   openSidebar: () => void;
+  isMobile: boolean | undefined;
 };
 
-const Header: VFC<Props> = ({ openSidebar }: Props) => {
+const Header: VFC<Props> = ({ openSidebar, isMobile }: Props) => {
   const padding = 4;
 
   return (
     <Flex bg="blue.200" w="100%">
-      <Box p={padding}>
-        <Button onClick={openSidebar}>三</Button>
-      </Box>
+      {!isMobile && (
+        <Box p={padding}>
+          <Button onClick={openSidebar}>三</Button>
+        </Box>
+      )}
       <Box p={padding}>tarozon</Box>
       <Spacer />
       <Box p={padding}>検索ボックス</Box>

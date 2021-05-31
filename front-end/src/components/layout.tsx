@@ -1,5 +1,5 @@
 import { VFC, useState } from "react";
-import { VStack, Box, Flex } from "@chakra-ui/react";
+import { VStack, Box, Flex, useBreakpointValue } from "@chakra-ui/react";
 
 import Header from "./header";
 import Sidebar from "./side";
@@ -14,15 +14,14 @@ const Layout: VFC<Props> = ({ children }: Props) => {
   const openSidebar = () => {
     setOpen(!isOpen);
   };
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
-    <VStack max-width>
-      <Header openSidebar={openSidebar} />
+    <VStack>
+      <Header openSidebar={openSidebar} isMobile={isMobile} />
       <Flex w="100%">
-        {isOpen && <Sidebar />}
-        <Box bg="red.200" w={{ base: "100%", md: isOpen ? "80%" : "100%" }}>
-          {children}
-        </Box>
+        {!isMobile && isOpen && <Sidebar />}
+        <Box w={{ base: "100%", md: isOpen ? "85%" : "100%" }}>{children}</Box>
       </Flex>
       <Footer />
     </VStack>

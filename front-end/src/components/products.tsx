@@ -1,13 +1,30 @@
 import { VFC } from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import { Container, Wrap, WrapItem } from "@chakra-ui/react";
 import Product from "./product";
 
 const Products: VFC = () => (
-  <Flex>
-    <Box>
-      <Product />
-    </Box>
-  </Flex>
+  <Container maxWidth="100%" centerContent>
+    <Wrap>
+      <WrapItem p={4}>
+        <Product />
+      </WrapItem>
+      <WrapItem p={4}>
+        <Product />
+      </WrapItem>
+      <WrapItem p={4}>
+        <Product />
+      </WrapItem>
+      <WrapItem p={4}>
+        <Product />
+      </WrapItem>
+      <WrapItem p={4}>
+        <Product />
+      </WrapItem>
+      <WrapItem p={4}>
+        <Product />
+      </WrapItem>
+    </Wrap>
+  </Container>
 );
 
 export default Products;
