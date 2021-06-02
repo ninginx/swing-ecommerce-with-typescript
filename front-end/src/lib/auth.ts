@@ -8,24 +8,24 @@ import {
   BaseTokenRequestHandler,
   TokenRequest,
   GRANT_TYPE_AUTHORIZATION_CODE,
-} from "@openid/appauth";
-import { NodeRequestor } from "@openid/appauth/built/node_support/node_requestor";
-import QueryStringUtils from "./queryStringUtils";
+} from '@openid/appauth';
+import { NodeRequestor } from '@openid/appauth/built/node_support/node_requestor';
+import QueryStringUtils from './queryStringUtils';
 
-if (typeof process.env.NEXT_PUBLIC_AuthorizationEndpoint === "undefined") {
-  throw new Error("環境変数:認証エンドポイントが設定されていません");
+if (typeof process.env.NEXT_PUBLIC_AuthorizationEndpoint === 'undefined') {
+  throw new Error('環境変数:認証エンドポイントが設定されていません');
 }
 
-if (typeof process.env.NEXT_PUBLIC_TokenEndpoint === "undefined") {
-  throw new Error("環境変数:トークンエンドポイントが設定されていません");
+if (typeof process.env.NEXT_PUBLIC_TokenEndpoint === 'undefined') {
+  throw new Error('環境変数:トークンエンドポイントが設定されていません');
 }
 
-if (typeof process.env.NEXT_PUBLIC_ClientId === "undefined") {
-  throw new Error("環境変数:Client Idが設定されていません");
+if (typeof process.env.NEXT_PUBLIC_ClientId === 'undefined') {
+  throw new Error('環境変数:Client Idが設定されていません');
 }
 const config = {
   clientId: process.env.NEXT_PUBLIC_ClientId,
-  authorizedCallbackUri: "/signin/callback",
+  authorizedCallbackUri: '/signin/callback',
   endpoints: {
     authorization: process.env.NEXT_PUBLIC_AuthorizationEndpoint,
     token: process.env.NEXT_PUBLIC_TokenEndpoint,
@@ -39,17 +39,17 @@ class AuthService {
   private readonly authServiceConfig = new AuthorizationServiceConfiguration({
     authorization_endpoint: config.endpoints.authorization,
     token_endpoint: config.endpoints.token,
-    revocation_endpoint: "undefined",
+    revocation_endpoint: 'undefined',
   });
 
   private readonly authNotifier = new AuthorizationNotifier();
   private readonly authRedirectHandler = new RedirectRequestHandler(
     undefined,
-    queryParser
+    queryParser,
   );
 
   private readonly tokenRequestHandler = new BaseTokenRequestHandler(
-    httpClient
+    httpClient,
   );
 
   private code?: string;
@@ -60,17 +60,17 @@ class AuthService {
     this.authNotifier.setAuthorizationListener(
       (
         request: AuthorizationRequest,
-        response: AuthorizationResponse | null
+        response: AuthorizationResponse | null,
       ) => {
         if (request.internal && response) {
           this.code = response.code;
           this.codeVerifier = request.internal.code_verifier;
         }
-      }
+      },
     );
   }
 
-  public login = (): void => {
+  public authorize = (): void => {
     const { authServiceConfig } = this;
     this.authRedirectHandler.performAuthorizationRequest(
       authServiceConfig,
@@ -78,18 +78,18 @@ class AuthService {
         client_id: config.clientId,
         redirect_uri: window.location.origin + config.authorizedCallbackUri,
         response_type: AuthorizationRequest.RESPONSE_TYPE_CODE,
-        scope: "openid email",
-      })
+        scope: 'openid email',
+      }),
     );
   };
 
-  public idTokenExchange = async (): Promise<string> => {
+  public login = async (): Promise<string> => {
     await this.authRedirectHandler.completeAuthorizationRequestIfPossible();
     const { clientId } = config;
     const { code, codeVerifier } = this;
     // code_verifer
     if (!code || !codeVerifier) {
-      throw new Error("Missing code or code_verifier");
+      throw new Error('Missing code or code_verifier');
     }
 
     const res = await this.tokenRequestHandler
@@ -101,21 +101,19 @@ class AuthService {
           code,
           extras: { codeVerifier },
           grant_type: GRANT_TYPE_AUTHORIZATION_CODE,
-        })
+        }),
       )
       .catch((err) => {
         // eslint-disable-next-line no-console
-        console.error("Failed token requesr", err);
+        console.error('Failed token requesr', err);
         throw err;
       });
-    if (typeof res.idToken !== "string") {
-      throw new Error("id tokenが取得できませんでした");
+    if (typeof res.idToken !== 'string') {
+      throw new Error('id tokenが取得できませんでした');
     }
 
     return res.idToken;
   };
 }
-
-// export default new AuthService();
 
 export default AuthService;

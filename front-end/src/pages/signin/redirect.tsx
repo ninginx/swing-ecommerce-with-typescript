@@ -1,11 +1,11 @@
-import { VFC, useEffect } from "react";
-import AuthService from "../../lib/auth";
+import { VFC, useEffect } from 'react';
+import AuthService from '../../lib/auth';
 
 const Redirect: VFC = () => {
   useEffect(() => {
     const signin = () => {
       const auth = new AuthService();
-      auth.login();
+      auth.authorize();
     };
     signin();
   }, []);
