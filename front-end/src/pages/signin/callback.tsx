@@ -8,9 +8,7 @@ const Callback: VFC = () => {
     const userInfo = async () => {
       const auth = new AuthService();
       const user = await auth.login();
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const user: userState = { ...user };
-      authSlice.actions.signin(user);
+      console.log(user);
     };
     void userInfo();
   }, []);

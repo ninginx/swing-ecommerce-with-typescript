@@ -1,7 +1,7 @@
 import { VFC } from 'react';
 
 import Layout from '../components/layout';
-import Products from '../components/container/products';
+import Products from '../components/container/enhancedProducts';
 
 const Home: VFC = () => (
   <Layout>

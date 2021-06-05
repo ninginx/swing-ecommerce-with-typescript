@@ -83,7 +83,7 @@ class AuthService {
     );
   };
 
-  public login = async (): Promise<string> => {
+  public login = async (): Promise<User> => {
     await this.authRedirectHandler.completeAuthorizationRequestIfPossible();
     const { clientId } = config;
     const { code, codeVerifier } = this;
@@ -111,9 +111,17 @@ class AuthService {
     if (typeof res.idToken !== 'string') {
       throw new Error('id tokenが取得できませんでした');
     }
+    const idToken: unknown = JSON.parse(atob(res.idToken));
+    if (!this.isIdToken(idToken)) {
+      throw new Error('id tokenの型が不正です');
+    }
 
-    return res.idToken;
+    return idToken;
   };
+
+  isUser = (idToken: unknown): idToken is User => true;
 }
+
+type User = {};
 
 export default AuthService;

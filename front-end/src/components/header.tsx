@@ -1,5 +1,7 @@
-import { VFC } from "react";
-import { Box, Button, Flex, Spacer } from "@chakra-ui/react";
+import { VFC } from 'react';
+import { Box, Button, Flex, Spacer } from '@chakra-ui/react';
+
+import Profile from './container/exhancedProfile';
 
 type Props = {
   openSidebar: () => void;
@@ -20,7 +22,7 @@ const Header: VFC<Props> = ({ openSidebar, isMobile }: Props) => {
       <Spacer />
       <Box p={padding}>検索ボックス</Box>
       <Spacer />
-      <Box p={padding}>プロフィール</Box>
+      <Profile />
       <Box p={padding}>注文履歴</Box>
       <Box p={padding}>カート</Box>
     </Flex>

@@ -5,9 +5,9 @@ import { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
-import { userSlice } from '../ducks/user';
+import { authSlice } from '../ducks/authSlice';
 
-const store = configureStore({ reducer: userSlice.reducer });
+const store = configureStore({ reducer: authSlice.reducer });
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => (
   <Provider store={store}>

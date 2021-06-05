@@ -1,0 +1,27 @@
+version: '3'
+
+services: 
+  node:
+    build: 
+      context: ./
+      dockerfile: ./Docker/node/Dockerfile
+    volumes: 
+      - ./:/app
+      - node_modules_volume:/app/node_modules
+    ports: 
+      - '8080:8080'
+    links:
+      - "postgres"
+  postgres:
+    image: postgres:12
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: 'sample'
+      POSTGRES_USER: 'root'
+      POSTGRES_PASSWORD: 'password'
+      PGDATA: '/var/lib/postgresql/data/pgdata'
+    volumes:
+      - ./pgsql/data:/var/lib/postgresql/data
+volumes: 
+  node_modules_volume:
