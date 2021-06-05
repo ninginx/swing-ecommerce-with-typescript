@@ -2,6 +2,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: 'tsconfig.json',
+    tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
@@ -23,11 +24,11 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': [
       'error',
       {
-        'vars': 'all',
-        'args': 'after-used',
-        'argsIgnorePattern': '_',
-        'ignoreRestSiblings': false,
-        'varsIgnorePattern': '_',
+        vars: 'all',
+        args: 'after-used',
+        argsIgnorePattern: '_',
+        ignoreRestSiblings: false,
+        varsIgnorePattern: '_',
       },
     ],
   },
