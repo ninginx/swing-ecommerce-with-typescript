@@ -16,3 +16,42 @@ export const isIdToken = (arg: any): arg is tokenExchangeResult => {
     typeof (arg as tokenExchangeResult).scope === 'string'
   );
 };
+
+export type userInfo = {
+  id: string;
+  email: string;
+  picture: string;
+  name: string;
+};
+
+export class UserInfo {
+  private picture: string;
+  private id: string;
+  private email: string;
+  private name: string;
+
+  constructor(picture: string, id: string, email: string, name: string) {
+    this.email = email;
+    this.picture = picture;
+    this.id = id;
+    this.name = name;
+  }
+
+  getUserInfo = () => {
+    return {
+      id: this.id,
+      email: this.email,
+      image: this.picture,
+      name: this.name,
+    };
+  };
+}
+
+export const isUserInfo = (arg: any): arg is userInfo => {
+  return (
+    typeof (arg as userInfo).id === 'string' &&
+    typeof (arg as userInfo).picture === 'string' &&
+    typeof (arg as userInfo).email === 'string' &&
+    typeof (arg as userInfo).name === 'string'
+  );
+};

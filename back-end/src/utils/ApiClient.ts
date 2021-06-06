@@ -30,7 +30,7 @@ class ApiClient {
           }
           resolve(response);
         })
-        .catch((error) => {
+        .catch((error: AxiosError) => {
           reject(error);
         });
     });

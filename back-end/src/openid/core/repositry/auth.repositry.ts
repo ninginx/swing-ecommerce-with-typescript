@@ -1,4 +1,4 @@
-import { tokenExchangeResult } from '../domain/Auth';
+import { tokenExchangeResult, userInfo } from '../domain/Auth';
 
 export interface GoogleAuthRepositry {
   tokenExchange(
@@ -6,6 +6,10 @@ export interface GoogleAuthRepositry {
     code: string,
     redirect_uri: string,
     client_id: string,
-    code_verifier: string,
+    //  code_verifier: string,
   ): Promise<tokenExchangeResult>;
+
+  getUserInfo(access_token: string): Promise<userInfo>;
+
+  //saveUserInfo(userInfo: userInfo): Promise<void>;
 }
