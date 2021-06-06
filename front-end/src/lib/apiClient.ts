@@ -29,7 +29,7 @@ class ApiClient {
       this.execute(config)
         .then((response: AxiosResponse<unknown>) => {
           switch (response.status) {
-            case 200:
+            case 201:
               if (!isT(response.data)) {
                 reject(new Error('型が不正です'));
 
@@ -66,4 +66,4 @@ class ApiClient {
     });
 }
 
-export default new ApiClient();
+export default ApiClient;
