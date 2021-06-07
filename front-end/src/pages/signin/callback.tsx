@@ -1,13 +1,12 @@
 import { Box } from '@chakra-ui/react';
 import { VFC, useEffect } from 'react';
+import router from 'next/router';
+import { useDispatch } from 'react-redux';
 import authService from '../../lib/authService';
-// import { authSlice, userState } from '../../ducks/authSlice';
-
-// type authCode = {
-//   code: string;
-// };
+import { authSlice } from '../../ducks/authSlice';
 
 const Callback: VFC = () => {
+  const dispach = useDispatch();
   useEffect(() => {
     const userInfo = async () => {
       const queryParams = new URLSearchParams(
@@ -20,11 +19,19 @@ const Callback: VFC = () => {
         }),
         {},
       );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const user = await authService.login(params as { code: string });
+      const loginUserInfo = await authService.login(params as { code: string });
+      dispach(
+        authSlice.actions.signin({
+          id: loginUserInfo.id,
+          name: loginUserInfo.name,
+          email: loginUserInfo.email,
+          isSignin: true,
+        }),
+      );
+      await router.push('/');
     };
     void userInfo();
-  }, []);
+  }, [dispach]);
 
   return <Box>ログイン中です</Box>;
 };

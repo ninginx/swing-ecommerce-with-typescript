@@ -44,14 +44,8 @@ class AuthService {
     return `${config.endpoints.authorization}?${params.toString()}`;
   };
 
-  public login = (urlParam: { code: string }): Promise<any> =>
+  public login = (urlParam: { code: string }): Promise<userInfo> =>
     new Promise((resolve, _reject) => {
-      // const data = new URLSearchParams();
-      // data.append('code', decodeURI(urlParam.code));
-      // data.append('grant_type', 'authorization_code');
-      // data.append('redirect_uri', config.authorizedCallbackUri);
-      // data.append('client_id', config.clientId);
-
       const data = {
         code: decodeURIComponent(urlParam.code),
         grant_type: 'authorization_code',
@@ -73,24 +67,24 @@ class AuthService {
           this.isAuthorizationCode,
         )
         .then((res) => {
-          console.log('res', res);
           resolve(res);
         })
         .catch((err) => console.error(err));
     });
-  // this.$apiClient.request(
-  //   {
-  //     method: 'post',
-  //     url: config.endpoints.token,
-  //     headers: {
-  //       'Content-Type': 'application/x-www-form-urlencoded',
-  //     },
-  //   },
-  //   this.isAuthorizationCode,
-  // );
 
-  private isAuthorizationCode = (arg: any): arg is any => true;
+  private isAuthorizationCode = (arg: unknown): arg is userInfo =>
+    typeof (arg as userInfo).id === 'string' &&
+    typeof (arg as userInfo).name === 'string' &&
+    typeof (arg as userInfo).email === 'string' &&
+    typeof (arg as userInfo).picture === 'string';
 }
+
+type userInfo = {
+  id: string;
+  email: string;
+  picture: string;
+  name: string;
+};
 
 const authService = new AuthService(new ApiClient());
 export default authService;

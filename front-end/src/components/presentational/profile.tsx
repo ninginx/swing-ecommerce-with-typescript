@@ -5,9 +5,10 @@ import { useRouter } from 'next/router';
 
 type Props = {
   isLogin: boolean;
+  userName: string;
 };
 
-const Profile: VFC<Props> = ({ isLogin }: Props) => {
+const Profile: VFC<Props> = ({ isLogin, userName }: Props) => {
   const router = useRouter();
 
   const loginHandleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -16,7 +17,7 @@ const Profile: VFC<Props> = ({ isLogin }: Props) => {
   };
 
   return isLogin ? (
-    <Box p={4}>タローやで</Box>
+    <Box p={4}>{userName}</Box>
   ) : (
     <Box p={4} onClick={loginHandleClick}>
       ログインして
