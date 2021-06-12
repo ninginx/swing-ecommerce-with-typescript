@@ -5,29 +5,30 @@ import axios, {
   AxiosResponse,
 } from 'axios';
 
+if (typeof process.env.NEXT_PUBLIC_BACK_END_API === 'undefined') {
+  throw new Error();
+}
+
 class ApiClient {
   private readonly client: AxiosInstance;
 
   constructor() {
     this.client = axios.create({
       withCredentials: true,
-      baseURL: process.env.BACKEND_API_URI,
+      baseURL: process.env.NEXT_PUBLIC_BACK_END_API,
     });
   }
 
-  public request = async <T>(
-    config: AxiosRequestConfig = {},
-    isT: (arg: unknown) => arg is T,
-  ): Promise<T> =>
+  public request = async <T>(config: AxiosRequestConfig = {}): Promise<T> =>
     new Promise((resolve, reject) => {
       this.execute(config)
-        .then((response: AxiosResponse<unknown>) => {
-          if (!isT(response)) {
-            reject(new Error('response型が不正です'));
+        .then((response) => {
+          // if (!isT(response)) {
+          //   reject(new Error('response型が不正です'));
 
-            return;
-          }
-          resolve(response);
+          //   return;
+          // }
+          resolve(response.data as T);
         })
         .catch((error) => {
           reject(error);
@@ -41,7 +42,7 @@ class ApiClient {
       this.client
         .request<T>(config)
         .then((res: AxiosResponse) => {
-          resolve(res.data);
+          resolve(res);
         })
         .catch((error: AxiosError) => {
           reject(error);
@@ -49,4 +50,4 @@ class ApiClient {
     });
 }
 
-export default ApiClient;
+export default new ApiClient();

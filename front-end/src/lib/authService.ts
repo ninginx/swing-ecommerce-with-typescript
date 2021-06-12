@@ -15,9 +15,14 @@ if (typeof process.env.NEXT_PUBLIC_TOKEN_END_POINT === 'undefined') {
 if (typeof process.env.NEXT_PUBLIC_CLIENT_ID === 'undefined') {
   throw new Error('環境変数:Client Idが設定されていません');
 }
+
+if (typeof process.env.NEXT_PUBLIC_ORIGIN === 'undefined') {
+  throw new Error('環境変数:ORIGINが設定されていません');
+}
+
 const config = {
   clientId: process.env.NEXT_PUBLIC_CLIENT_ID,
-  authorizedCallbackUri: `http://localhost:3000/signin/callback`,
+  authorizedCallbackUri: `${process.env.NEXT_PUBLIC_ORIGIN}/signin/callback`,
   endpoints: {
     authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_END_POINT,
     token: process.env.NEXT_PUBLIC_TOKEN_END_POINT,
@@ -27,9 +32,9 @@ const config = {
 // const queryParser = new QueryStringUtils();
 
 class AuthService {
-  private readonly $apiClient: ApiClient;
-  constructor(apiClient: ApiClient) {
-    this.$apiClient = apiClient;
+  private readonly $apiClient;
+  constructor() {
+    this.$apiClient = ApiClient;
   }
 
   public authorize = (): string => {
@@ -54,29 +59,18 @@ class AuthService {
       };
 
       this.$apiClient
-        .request(
-          {
-            method: 'post',
-            url: config.endpoints.token,
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Requested-With': 'XMLHttpRequest',
-            },
-            data,
+        .request({
+          method: 'post',
+          url: '/oidc',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
           },
-          this.isAuthorizationCode,
-        )
-        .then((res) => {
-          resolve(res);
+          data,
         })
+        .then((res) => resolve(res as userInfo))
         .catch((err) => console.error(err));
     });
-
-  private isAuthorizationCode = (arg: unknown): arg is userInfo =>
-    typeof (arg as userInfo).id === 'string' &&
-    typeof (arg as userInfo).name === 'string' &&
-    typeof (arg as userInfo).email === 'string' &&
-    typeof (arg as userInfo).picture === 'string';
 }
 
 type userInfo = {
@@ -86,5 +80,5 @@ type userInfo = {
   name: string;
 };
 
-const authService = new AuthService(new ApiClient());
+const authService = new AuthService();
 export default authService;
