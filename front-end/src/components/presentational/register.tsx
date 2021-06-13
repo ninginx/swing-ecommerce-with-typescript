@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import React, { VFC, useState } from 'react';
 import {
   HStack,
   Stack,
@@ -12,9 +12,13 @@ import {
   FormErrorMessage,
   VStack,
   FormLabel,
+  Image,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 
+type Props = {
+  submitProduct: (product: ProductForm) => void;
+};
 export type ProductForm = {
   name: string;
   category: string;
@@ -23,18 +27,40 @@ export type ProductForm = {
   picture: FileList;
 };
 
-type Props = {
-  submitProduct: (product: ProductForm) => void;
-};
-
 const Register: VFC<Props> = ({ submitProduct }) => {
   const {
+    setValue,
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isSubmitted, isValid },
   } = useForm<ProductForm>({
     mode: 'all',
   });
+
+  const [image, setImage] = useState<string>();
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const imageFile = e.target.files;
+    if (!imageFile) {
+      return;
+    }
+    setValue('picture', imageFile);
+
+    const file = imageFile.item(0);
+    if (!file) {
+      return;
+    }
+    const fileReader = new FileReader();
+    fileReader.onload = (event) => {
+      const result = event.target?.result;
+      if (typeof result === 'string') {
+        setImage(result);
+      }
+    };
+    fileReader.readAsDataURL(file);
+    e.preventDefault();
+  };
 
   return (
     // login required
@@ -76,6 +102,7 @@ const Register: VFC<Props> = ({ submitProduct }) => {
                   {...register('category', { required: '必須項目です' })}
                   textAlign={['center', 'left']}
                 >
+                  <option value="non-category">-</option>
                   <option value="book">本</option>
                   <option value="appliance">家電</option>
                   <option value="toy">おもちゃ</option>
@@ -129,9 +156,13 @@ const Register: VFC<Props> = ({ submitProduct }) => {
           <FormControl id="picture" isRequired isInvalid>
             <Stack direction={['column', 'row']} align={['center', 'left']}>
               <FormLabel
-                w={['100%']}
-                textAlign={['center']}
+                w="100%"
+                textAlign="center"
                 htmlFor="fileImage"
+                bg="blue.200"
+                py={3}
+                m={0}
+                borderRadius="lg"
               >
                 画像をアップロード
               </FormLabel>
@@ -141,13 +172,18 @@ const Register: VFC<Props> = ({ submitProduct }) => {
                   display="none"
                   accept="image/*,.png,.jpg"
                   type="file"
-                  {...register('picture', { required: '必須項目です' })}
-                  // ref={inputRef}
-                  // onChange={handleChange}
+                  {...register('picture')}
+                  onChange={handleChange}
                 />
               </VStack>
             </Stack>
           </FormControl>
+
+          <Stack align="center">
+            <VStack>
+              <Image maxW={['320px', '540px']} src={image} />
+            </VStack>
+          </Stack>
 
           <Stack align="center">
             <Button
