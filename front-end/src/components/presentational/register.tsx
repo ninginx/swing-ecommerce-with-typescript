@@ -11,6 +11,7 @@ import {
   FormControl,
   FormErrorMessage,
   VStack,
+  FormLabel,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 
@@ -127,11 +128,17 @@ const Register: VFC<Props> = ({ submitProduct }) => {
 
           <FormControl id="picture" isRequired isInvalid>
             <Stack direction={['column', 'row']} align={['center', 'left']}>
-              <Box w={['100%', '170px']} textAlign={['center', 'left']}>
+              <FormLabel
+                w={['100%']}
+                textAlign={['center']}
+                htmlFor="fileImage"
+              >
                 画像をアップロード
-              </Box>
-              <VStack w="320px">
+              </FormLabel>
+              <VStack>
                 <Input
+                  id="fileImage"
+                  display="none"
                   accept="image/*,.png,.jpg"
                   type="file"
                   {...register('picture', { required: '必須項目です' })}
